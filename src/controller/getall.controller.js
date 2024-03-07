@@ -1,14 +1,16 @@
 import Portfolio from "../Schema/data.js";
-
+import { errorResMsg, successResMsg } from "../middleware/errorHandler.js";
 
 const getAllPortfolioEntries = async (req, res) => {
   try {
-
     const portfolioEntries = await Portfolio.find();
-
-    res.status(200).json(portfolioEntries);
+    return successResMsg(res, 200, {
+      message: "all portfolio fetched",
+      portfolioEntries,
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+   return  errorResMsg(res,500,"error fetching portfolio")
+
   }
 };
 
