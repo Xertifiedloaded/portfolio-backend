@@ -3,7 +3,7 @@ import Portfolio from "../Schema/data.js";
 const editPortfolio = async (req, res) => {
     try {
       const { id } = req.params;
-      const { imageGithubUrl, projectName, projectUrl } = req.body;
+      const { imageGithubUrl, projectName,tools, projectUrl } = req.body;
   console.log(req.body);
       const updatedPortfolio = await Portfolio.findByIdAndUpdate(
         id, 
@@ -11,6 +11,7 @@ const editPortfolio = async (req, res) => {
           imageGithubUrl: imageGithubUrl,
           projectName: projectName,
           projectUrl: projectUrl,
+          tools
         },
         { new: true } 
       );

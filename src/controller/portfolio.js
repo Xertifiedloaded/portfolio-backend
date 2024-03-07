@@ -7,12 +7,13 @@ const createPortfolioEntry = async (req, res) => {
   try {
 
     const result = await cloudinary.uploader.upload(req.file.path);
-    const { imageGithubUrl, projectName, projectUrl } = req.body;
+    const { imageGithubUrl,tools, projectName, projectUrl } = req.body;
     const portfolioEntry =  await Portfolio.create({
       projectImage: result.secure_url,
       imageGithubUrl,
       projectName,
-      projectUrl
+      projectUrl,
+      tools
     });
 
     const savedEntry = await portfolioEntry.save();
