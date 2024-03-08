@@ -7,10 +7,10 @@ import { deletePortfolio, editPortfolio } from "../controller/editPortfolio.js";
 import { submitContactForm } from "../controller/email.controller.js";
 
 const router = express.Router();
-router.get("/get",  getAllPortfolioEntries);
+router.get("/get", getAllPortfolioEntries);
 router.get("/", Landing);
 router.post("/email", submitContactForm);
 router.post("/post", upload.single("image"), createPortfolioEntry);
-router.patch('/edit/:id', editPortfolio);
-router.delete('/delete/:id', deletePortfolio);
+router.patch("/edit/:id", upload.single("image"), editPortfolio);
+router.delete("/delete/:id", deletePortfolio);
 export default router;
