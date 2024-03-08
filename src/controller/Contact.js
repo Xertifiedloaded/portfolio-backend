@@ -1,6 +1,5 @@
-import emailTransporter from '../utils/EmailTransporter.js';
-import sendEmail from '../utils/sendEmail.js';
-import { formData } from '../utils/formData.js';
+import emailTransporter from "../utils/emailTransporters.js";
+import sendEmail from "../utils/sendEmail.js";
 
 const transporter = emailTransporter();
 
