@@ -4,7 +4,7 @@ import { errorResMsg, successResMsg } from "../middleware/errorHandler.js";
 
 const getAllPortfolioEntries = async (req, res) => {
   try {
-    // Fetch portfolio entries sorted by creation date in descending order
+    // sorted by creation date in descending order
     const portfolioEntries = await Portfolio.find().sort({ createdAt: -1 });
 
     return successResMsg(res, 200, {
