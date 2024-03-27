@@ -1,0 +1,89 @@
+import express from "express";
+import BlogPost from "../Schema/blog.js";
+import Cloudinary from "../middleware/cloudinary/cloudinary.js";
+
+
+
+const postBlog = async (req, res) => {
+  try {
+    const result = await Cloudinary.uploader.upload(req.file.path);
+    const { headline, title, author,  content } = req.body;
+    const newBlogPost = new BlogPost({
+      headline,
+      title,
+      author,
+      slug,
+      content,
+      image: result.secure_url,
+    });
+    await newBlogPost.save();
+    res.status(201).json(newBlogPost);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
+
+
+const getBlog = async (req, res) => {
+  try {
+    const blogPosts = await BlogPost.find();
+    res.json(blogPosts);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+
+
+
+const updateBlogPost = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const { headline, title, slug, author, publicationDate, content } =
+      req.body;
+    const result = await Cloudinary.uploader.upload(req.file.path);
+    const updateBlog = await BlogPost.findByIdAndUpdate(
+      id,
+      {
+        headline: headline,
+        title: title,
+        author: author,
+        slug: slug,
+        content: content,
+        image: result.secure_url,
+      },
+      { new: true }
+    );
+    if (!updateBlog) {
+      return res.status(404).json({ message: "blog entry not found" });
+    }
+    const updatedBlogPost = await updateBlog.save();
+
+    res.json(updatedBlogPost);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
+
+
+
+const deleteBlog = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const blog = await BlogPost.findById(id);
+    if (!blog) {
+      return res.status(404).json({ message: "blog  not found" });
+    }
+    await blog.findByIdAndDelete(id);
+
+    res.status(200).json({
+      message: "blog deleted successfully",
+      blog,
+    });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+
+export {postBlog,deleteBlog,getBlog,updateBlogPost}
