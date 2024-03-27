@@ -26,7 +26,7 @@ const postBlog = async (req, res) => {
 
 const getBlog = async (req, res) => {
   try {
-    const blogPosts = await BlogPost.find();
+    const blogPosts = await BlogPost.find().sort({ _id: 1 });
     res.json(blogPosts);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -34,12 +34,28 @@ const getBlog = async (req, res) => {
 };
 
 
+const getBySlug = async (req, res) => {
+    const { slug } = req.params;
+    try {
+      const contentBySlug = await BlogPost.findOne({ slug: slug });
+      if (!contentBySlug) {
+        return res.status(404).json({ error: 'Blog not found' });
+      }
+      res.json(contentBySlug);
+    } catch (error) {
+      console.error('Error fetching user:', error);
+      res.status(500).json({ error: 'content not found' });
+    }
+ };
+ 
+
+
 
 
 const updateBlogPost = async (req, res) => {
   const { id } = req.params;
   try {
-    const { headline, title, slug, author, publicationDate, content } =
+    const { headline, title, slug, author, content } =
       req.body;
     const result = await Cloudinary.uploader.upload(req.file.path);
     const updateBlog = await BlogPost.findByIdAndUpdate(
@@ -86,4 +102,4 @@ const deleteBlog = async (req, res) => {
 };
 
 
-export {postBlog,deleteBlog,getBlog,updateBlogPost}
+export {postBlog,deleteBlog,getBlog,updateBlogPost,getBySlug}
