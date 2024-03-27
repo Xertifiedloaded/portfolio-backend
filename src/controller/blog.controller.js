@@ -7,7 +7,7 @@ import Cloudinary from "../middleware/cloudinary/cloudinary.js";
 const postBlog = async (req, res) => {
   try {
     const result = await Cloudinary.uploader.upload(req.file.path);
-    const { headline, title, author,  content } = req.body;
+    const { headline, title, author, slug, content } = req.body;
     const newBlogPost = new BlogPost({
       headline,
       title,
