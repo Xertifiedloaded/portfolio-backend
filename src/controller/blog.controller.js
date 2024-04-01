@@ -2,8 +2,6 @@ import express from "express";
 import BlogPost from "../Schema/blog.js";
 import Cloudinary from "../middleware/cloudinary/cloudinary.js";
 
-
-
 const postBlog = async (req, res) => {
   try {
     const result = await Cloudinary.uploader.upload(req.file.path);
@@ -23,40 +21,33 @@ const postBlog = async (req, res) => {
   }
 };
 
-
 const getBlog = async (req, res) => {
   try {
-    const blogPosts = await BlogPost.find().sort({ _id: 1 });
+    const blogPosts = await BlogPost.find().sort({ _id: -1 });
     res.json(blogPosts);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
 
-
 const getBySlug = async (req, res) => {
-    const { slug } = req.params;
-    try {
-      const contentBySlug = await BlogPost.findOne({ slug: slug });
-      if (!contentBySlug) {
-        return res.status(404).json({ error: 'Blog not found' });
-      }
-      res.json(contentBySlug);
-    } catch (error) {
-      console.error('Error fetching user:', error);
-      res.status(500).json({ error: 'content not found' });
+  const { slug } = req.params;
+  try {
+    const contentBySlug = await BlogPost.findOne({ slug: slug });
+    if (!contentBySlug) {
+      return res.status(404).json({ error: "Blog not found" });
     }
- };
- 
-
-
-
+    res.json(contentBySlug);
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    res.status(500).json({ error: "content not found" });
+  }
+};
 
 const updateBlogPost = async (req, res) => {
   const { id } = req.params;
   try {
-    const { headline, title, slug, author, content } =
-      req.body;
+    const { headline, title, slug, author, content } = req.body;
     const result = await Cloudinary.uploader.upload(req.file.path);
     const updateBlog = await BlogPost.findByIdAndUpdate(
       id,
@@ -81,8 +72,6 @@ const updateBlogPost = async (req, res) => {
   }
 };
 
-
-
 const deleteBlog = async (req, res) => {
   try {
     const { id } = req.params;
@@ -101,5 +90,4 @@ const deleteBlog = async (req, res) => {
   }
 };
 
-
-export {postBlog,deleteBlog,getBlog,updateBlogPost,getBySlug}
+export { postBlog, deleteBlog, getBlog, updateBlogPost, getBySlug };
