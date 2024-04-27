@@ -14,6 +14,15 @@ const portfolioSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    description: {
+      type: String,
+      required: true,
+    },
+    status: {
+      type: String,
+      required: true,
+      enum: ['in-progress', 'completed', 'paused']
+    },
     projectUrl: {
       type: String,
       required: true,
