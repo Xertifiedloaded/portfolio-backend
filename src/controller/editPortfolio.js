@@ -1,19 +1,25 @@
 import Portfolio from "../Schema/data.js";
 import cloudinary from "../middleware/cloudinary/cloudinary.js";
+
+import multer from "multer";
+
+// Configure multer for file uploads
+const storage = multer.diskStorage({});
+const upload = multer({ storage });
+
 const editPortfolio = async (req, res) => {
   try {
     const { id } = req.params;
-    const { projectName, tools, projectUrl, projectImage, imageGithubUrl } = req.body;
-    const result = await cloudinary.uploader.upload(req.file.path);
+    const filtToEdit = { ...req.body };
+
+    if (req.file) {
+      const result = await cloudinary.uploader.upload(req.file.path);
+      filtToEdit.imageUrl = result.secure_url; 
+    }
+
     const updatedPortfolio = await Portfolio.findByIdAndUpdate(
       id,
-      {
-        imageGithubUrl: imageGithubUrl,
-        projectName: projectName,
-        projectUrl: projectUrl,
-        tools: tools,
-        projectImage: result.secure_url,
-      },
+      { $set: filtToEdit },
       { new: true }
     );
 
@@ -51,4 +57,4 @@ const deletePortfolio = async (req, res) => {
   }
 };
 
-export { editPortfolio, deletePortfolio };
+export { editPortfolio, deletePortfolio, upload };

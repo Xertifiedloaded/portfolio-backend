@@ -6,7 +6,7 @@ import { getAllPortfolioEntries } from "../controller/getall.controller.js";
 import { deletePortfolio, editPortfolio } from "../controller/editPortfolio.js";
 import { submitContactForm } from "../controller/email.controller.js";
 import { deleteBlog, getBlog, getBySlug, postBlog, updateBlogPost } from "../controller/blog.controller.js";
-// import { postBlog } from "../controller/blog.controller.js";
+
 
 const router = express.Router();
 router.get("/get", getAllPortfolioEntries);
