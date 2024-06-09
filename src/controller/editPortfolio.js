@@ -1,43 +1,57 @@
 import Portfolio from "../Schema/data.js";
 import cloudinary from "../middleware/cloudinary/cloudinary.js";
 
-import multer from "multer";
 
-// Configure multer for file uploads
-const storage = multer.diskStorage({});
-const upload = multer({ storage });
-
-const editPortfolio = async (req, res) => {
+const editPortfolioEntry = async (req, res) => {
   try {
-    const { id } = req.params;
-    const filtToEdit = { ...req.body };
+    const { id } = req.params; 
+    const {
+      imageGithubUrl,
+      tools,
+      description,
+      status,
+      projectName,
+      projectUrl,
+    } = req.body;
+
+    let updatedFields = {
+      imageGithubUrl,
+      projectName,
+      projectUrl,
+      tools,
+      description,
+      status,
+    };
 
     if (req.file) {
       const result = await cloudinary.uploader.upload(req.file.path);
-      filtToEdit.imageUrl = result.secure_url; 
+      updatedFields.projectImage = result.secure_url;
     }
 
-    const updatedPortfolio = await Portfolio.findByIdAndUpdate(
+    const updatedPortfolioEntry = await Portfolio.findByIdAndUpdate(
       id,
-      { $set: filtToEdit },
+      updatedFields,
       { new: true }
     );
 
-    if (!updatedPortfolio) {
+    if (!updatedPortfolioEntry) {
       return res.status(404).json({ message: "Portfolio entry not found" });
     }
 
-    res.status(200).json({
-      message: "Portfolio entry updated successfully",
-      updatedPortfolio,
-    });
+    res.status(200).json(updatedPortfolioEntry);
   } catch (error) {
-    console.error("Error updating portfolio:", error);
-    res
-      .status(500)
-      .json({ message: "Portfolio entry not updated", error: error.message });
+    res.status(400).json({ message: error.message });
   }
 };
+
+
+
+
+
+
+
+
+
 
 const deletePortfolio = async (req, res) => {
   try {
@@ -57,4 +71,4 @@ const deletePortfolio = async (req, res) => {
   }
 };
 
-export { editPortfolio, deletePortfolio, upload };
+export { editPortfolioEntry, deletePortfolio };
